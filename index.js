@@ -6,17 +6,21 @@ var rimraf = require('rimraf')
 
 
 // Wrap a new-style plugin to provide the .read API
-
-module.exports = NewStyleTreeWrapper
 function NewStyleTreeWrapper (newStyleTree) {
-  this.isReadAPICompatTree = true
   this.newStyleTree = newStyleTree
   this.description = newStyleTree.description ||
     (newStyleTree.constructor && newStyleTree.constructor.name) ||
     'NewStyleTreeWrapper'
 }
+wrapFactory(NewStyleTreeWrapper);
 
-NewStyleTreeWrapper.prototype.read = function (readTree) {
+function wrapFactory(klass) {
+  klass.prototype.isReadAPICompatTree = true;
+  klass.prototype.read = read;
+  klass.prototype.cleanup = cleanup;
+}
+
+function read(readTree) {
   // if the constructor was not called directly just operate on `this`
   var tree = this.newStyleTree || this;
 
@@ -57,10 +61,19 @@ NewStyleTreeWrapper.prototype.read = function (readTree) {
     })
 }
 
-NewStyleTreeWrapper.prototype.cleanup = function () {
-  quickTemp.remove(this.newStyleTree, 'outputPath')
-  quickTemp.remove(this.newStyleTree, 'cachePath')
-  if (this.newStyleTree.cleanup) {
-    return this.newStyleTree.cleanup()
+function cleanup() {
+  // if the constructor was not called directly just operate on `this`
+  var tree = this.newStyleTree || this;
+
+  quickTemp.remove(tree, 'outputPath')
+  quickTemp.remove(tree, 'cachePath')
+  if (tree.cleanup) {
+    return tree.cleanup()
   }
+}
+
+
+module.exports = {
+  wrapInstance: NewStyleTreeWrapper,
+  wrapFactory: wrapFactory
 }
