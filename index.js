@@ -67,8 +67,8 @@ function cleanup() {
 
   quickTemp.remove(tree, 'outputPath')
   quickTemp.remove(tree, 'cachePath')
-  if (tree.cleanup) {
-    return tree.cleanup()
+  if (this.newStyleTree && this.newStyleTree.cleanup) {
+    return this.newStyleTree.cleanup()
   }
 }
 
