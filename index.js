@@ -7,6 +7,8 @@ var rimraf = require('rimraf')
 
 // Wrap a new-style plugin to provide the .read API
 function NewStyleTreeWrapper (newStyleTree) {
+  if (!(this instanceof NewStyleTreeWrapper)) { return new NewStyleTreeWrapper(newStyleTree); }
+
   this.newStyleTree = newStyleTree
   this.description = newStyleTree.description ||
     (newStyleTree.constructor && newStyleTree.constructor.name) ||
