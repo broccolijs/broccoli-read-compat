@@ -17,11 +17,14 @@ wrapFactory(NewStyleTreeWrapper);
 function wrapFactory(klass) {
   klass.prototype.isReadAPICompatTree = true;
   klass.prototype.read = read;
+
+  var originalCleanup = klass.prototype.cleanup;
+
   klass.prototype.cleanup = function() {
     cleanup.call(this);
 
-    if (klass.prototype.cleanup) {
-      return klass.prototype.cleanup.call(this);
+    if (originalCleanup) {
+      return originalCleanup.call(this);
     }
   }
 }
