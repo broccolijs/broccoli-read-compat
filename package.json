@@ -1,6 +1,6 @@
 {
   "name": "broccoli-read-compat",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Use Broccoli's new .rebuild API and still support the legacy .read interface.",
   "main": "index.js",
   "scripts": {
